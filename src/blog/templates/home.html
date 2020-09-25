@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+
+
+<h1>Blogz</h1>
+
+<ul style='list-style-type: none;'>
+    {% for post in object_list %}
+        <li>
+            <a href="{% url 'article_detail' post.pk %}" class="font-weight-bolder text-decoration-none">{{ post.title }}</a>
+            - <a href="{% url 'category' post.category|slugify %}" class='badge badge-secondary'>{{ post.category|title }}</a>
+            - <strong>
+                {{ post.author.first_name }}
+                {{ post.author.last_name }}
+            </strong> - 
+            {{ post.post_date|date:"d. M Y, G:i" }} 
+
+            {% if user.is_authenticated %}
+                {% if user.id == post.author.id or user.id == 1 %}
+
+                    - <small><a href="{% url 'update_post' post.pk %}" class="badge badge-info">Edit</a></small>
+                    <small><a href="{% url 'delete_post' post.pk %}" class="badge badge-info">Delete</a></small>
+
+                {% endif %}
+            {% endif %}
+
+            <br>
+            {{ post.snippet }}
+        </li>
+        <hr>
+    {% endfor %}
+</ul>
+
+
+{% endblock content %}

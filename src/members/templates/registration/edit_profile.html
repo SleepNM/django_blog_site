@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Edit Settings{% endblock title %}
+{% block content %}
+
+{% if user.is_authenticated %}
+
+    <h1>Edit Settings...</h1>
+    <br><br>
+    <div class="form-group">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <a class="badge badge-info" href="../password/">Change Password</a>
+            <br>
+            <br>
+            <button class="btn btn-dark">Update</button>
+        </form>
+    </div>
+    
+{% else %}
+
+    <h1>You are not loged in.</h1>
+    <a class="btn btn-dark" href="{% url 'login' %}">Login</a>
+
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Blog Categoies{% endblock title %}
+{% block content %}
+
+    <h1>Blog Categories:</h1>
+<ul style='list-style-type: none;'>
+    {% for item in cat_menu_list %}
+    
+        <li>
+            <h3><a class="badge badge-secondary" href="{% url 'category' item|slugify %}">{{ item|title }}</a></h3>
+        </li>
+
+    {% endfor %}
+</ul>
+
+{% endblock content %}

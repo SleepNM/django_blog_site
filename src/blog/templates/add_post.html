@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Add blog post{% endblock title %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<h1>Add Post...</h1>
+<br><br>
+<div class="form-group">
+    {% comment %} <form method="POST" enctype='multipart/form-data'> {% endcomment %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <button class="btn btn-dark">Post</button>
+    </form>
+</div>
+<script>
+    var name = '{{ user.id }}'
+
+    document.getElementById('user').value = name;
+
+</script>
+{% else %}
+
+<H1>Please login first.</H1>
+
+{% endif %}
+
+{% endblock content %}

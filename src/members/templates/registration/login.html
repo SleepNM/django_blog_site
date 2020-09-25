@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+
+{% if user.is_authenticated %}
+
+    <h1>Your are already logged in.</h1>
+    <a class="btn btn-dark" href="{% url 'logout' %}">Logout</a>
+
+{% else %}
+
+    <h1>Login...</h1>
+    <br><br>
+    <div class="form-group">
+        <form method="POST">
+            {% csrf_token %}
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id='username' name='username'>
+            </div>
+            <div class="form-group">
+                <label for="passwoerd">Password</label>
+                <input type="password" class="form-control" id='password' name='password'>
+            </div>
+            <br>
+            <button class="btn btn-dark">Login</button>
+        </form>
+    <small>Not Registered? Sign up <a href="{% url 'register' %}" class='text-decoration-none'>here.</a></small>
+
+    </div>
+
+{% endif %}
+{% endblock content %}

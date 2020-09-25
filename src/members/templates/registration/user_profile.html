@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+
+<div class="jumbotron">
+    <h1>User profile:</h1>
+
+    <div class="card bg-light mb-3">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                {% if page_user.profile_pic %}
+
+                    <img src="{{ page_user.profile_pic.url }}" class="img-thumbnail border border-light">
+
+                {% else %}
+
+                    <img src="{% static 'blog/img/default_profile_pic.png' %}" class="img-thumbnail border border-light">
+
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">{{ page_user }}</h3>
+                    <h5 class="card-text">{{ page_user.user.first_name }} {{ page_user.user.last_name }}</h5>
+                    <hr>
+                    <p class="card-text">{{ page_user.user.profile.bio }}</p>
+                    <p class="card-text">
+                    {% if page_user.website_url %}
+
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <a href="{{ page_user.website_url }}" class="text-decoration-none">Website</a>
+                            </small>
+                        </p>
+
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user.is_authenticated and user.id == page_user.id %}
+
+        <a href="{% url 'edit_profile' %}" class="badge badge-info text-decoration-none">Edit Settings</a>
+        <a href="{% url 'edit_profile_page' user.profile.id %}" class="badge badge-info text-decoration-none">Edit Profile Page</a>
+
+    {% endif %}
+</div>
+{% endblock content %}

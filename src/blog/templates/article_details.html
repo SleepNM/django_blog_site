@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ post.title_tag }}{% endblock title %}
+{% block content %}
+
+<h1>{{ post.title }}</h1>
+<small>
+    By:
+    {{ post.author.first_name }}
+    {{ post.author.last_name }} -
+    {{ post.post_date|date:"d. M Y, G:i" }}
+</small>
+
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id or user.id == 1 %}
+
+    - <small><a href="{% url 'update_post' post.pk %}" class="badge badge-info">Edit</a></small>
+    <small><a href="{% url 'delete_post' post.pk %}" class="badge badge-info">Delete</a></small>
+
+    {% endif %}
+{% endif %}
+<br>
+<hr>
+{{ post.snippet }}
+<br>
+<hr>
+{{ post.body|safe }}
+<hr>
+<form action="{% url 'like_post' post.pk %}" method='POST'>
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        {% if liked %}
+
+        <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-dark">Unlike - <span class="badge badge-dark">{{ total_likes }} Like(s)</span></button>
+
+        {% else %}
+
+        <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-outline-dark">Like - <span class="badge badge-light">{{ total_likes }} Like(s)</span></button>
+
+        {% endif %}
+    {% else %}
+
+    <small><a class="btn btn-outline-dark" href="{% url 'login' %}">Login to Like - <span class="badge badge-light">{{ total_likes }} Like(s)</span></a></small>
+
+    {% endif %}
+
+</form>
+<br>
+<div class="card mb-3">
+    <div class="row no-gutters">
+        <div class="col-md-2">
+
+            {% if post.author.profile.profile_pic %}
+
+                <img src="{{ post.author.profile.profile_pic.url }}" class="img-thumbnail border border-light">
+
+            {% else %}
+
+                <img src="{% static 'blog/img/default_profile_pic.png' %}" class="img-thumbnail border border-light">
+
+            {% endif %}
+
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'show_profile_page' post.author.profile.id %}" class='text-decoration-none'>{{ post.author.first_name }} {{ post.author.last_name }}</a></h5>
+                <p class="card-text">{{ post.author.profile.bio }}</p>
+
+                
+
+                {% if post.author.profile.website_url %}
+
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <a href="{{ post.author.profile.website_url }}" class="text-decoration-none">Website</a>
+                        </small>
+                    </p>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<h4>Comments:</h4>
+<a href="{% url 'add_comment' post.pk %}" class='badge badge-secondary'>Add a Comment</a>
+<br>
+<hr>
+{% if not post.comments.all %}
+
+    No comments yet..
+
+{% else %}
+    {% for comment in post.comments.all %}
+
+        <strong>{{ comment.name }}</strong> - <em>{{ comment.date_added|date:"d. M Y, G:i" }}</em>
+        <br>
+        {{ comment.body }}
+        <hr>
+
+    {% endfor %}
+{% endif %}
+<br>
+{% endblock content %}
